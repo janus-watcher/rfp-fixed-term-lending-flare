@@ -2,6 +2,17 @@
 
 All notable changes to this RFP. Versioned snapshots live in [`drafts/`](drafts/); the push-ready set lives in [`github_upload/`](github_upload/).
 
+## Draft 5 — 2026-05-31
+
+Named the second demand driver as what it is: on-chain SBLOC.
+
+- **Section 4.6** rewritten around securities-backed lending (SBLOC) and *buy, borrow, die* — the established TradFi wealth strategy (hold appreciating asset, borrow against it tax-free since borrowing isn't a realisation event, step-up at death). The RFP is the on-chain port: SBLOC against FXRP/FLR/FBTC. Anchored on a ~$522bn (2024) → >$1tn (2033) market, so the demand pattern is proven, not hypothetical.
+- Added two honest qualifications: it is *living off debt, not yield* (carries the reflexive/liquidation fragility), and the *volatility gap* — crypto collateral runs multiples of equity vol (BTC ~3–4× S&P), so on-chain SBLOC is structurally more liquidation-prone than equity SBLOC; deterministic liquidation + fixed term narrow the gap, don't close it.
+- **Failure Mode 10.4** reinforced: vol gap made operational — an LLTV safe for equity SBLOC is reckless against FLR.
+- Sources + README updated.
+
+Commit: `Draft 5: frame second demand driver as on-chain SBLOC (buy-borrow-die) + volatility gap`
+
 ## Draft 4 — 2026-05-31
 
 Separated two risks that "liquidation risk" was bundling, and named the second demand driver.

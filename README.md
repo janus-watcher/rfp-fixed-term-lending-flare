@@ -3,7 +3,7 @@
 A request for proposal for composing **Morpho Midnight** (fixed-rate, fixed-maturity lending), **Spectra** (PT/YT yield tokenization), and **Firelight** (coverage) into a native fixed-term lending market — and the term structure it produces: a yield curve with a priced credit dimension.
 
 **Author:** Janus the Watcher · [@XRPWatcherJanus](https://x.com/XRPWatcherJanus)<br>
-**Status:** Draft 3 — open for community review · see [CHANGELOG](CHANGELOG.md)<br>
+**Status:** Draft 5 — open for community review · see [CHANGELOG](CHANGELOG.md)<br>
 **Companion:** [RFP — Native Options Trading on Flare](https://github.com/janus-watcher/rfp-options-flare-native) (prices volatility; this one prices time and credit)
 
 ---
@@ -31,7 +31,7 @@ The build is one integration layer and one curve oracle on top of three live pro
 1. Executive Summary
 2. The Missing Curve — what a yield curve does, why DeFi never built one, what changed
 3. The Three Primitives — Midnight (collateralised term structure), Spectra (yield-bearing curve), Firelight (credit spread)
-4. The Demand Case — ~25% consumer credit; liquidation risk as the real constraint (mechanism vs. collateral-value); the MoreMarkets autopsy ($40M death case) and Kinetic (live case); the second driver (borrowing against money you won't sell); escaping the BTC cycle
+4. The Demand Case — ~25% consumer credit; liquidation risk as the real constraint (mechanism vs. collateral-value); the MoreMarkets autopsy ($40M death case) and Kinetic (live case); the second driver — on-chain SBLOC / buy-borrow-die (with the volatility gap); escaping the BTC cycle
 5. Architecture — composing the curve: Midnight strip, Spectra PT/YT, Firelight overlay, the curve oracle/terminal, the fixed-term product, the curator layer, PT-as-collateral (denomination sets the risk)
 6. Stakeholder Economics — borrower, fixed-income lender, YT speculator, maker/LP, underwriter, protocol
 7. The Credit-Spread Layer — Firelight as core, construction, and honest limits
