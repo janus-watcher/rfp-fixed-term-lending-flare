@@ -31,13 +31,13 @@ The build is one integration layer and one curve oracle on top of three live pro
 1. Executive Summary
 2. The Missing Curve — what a yield curve does, why DeFi never built one, what changed
 3. The Three Primitives — Midnight (collateralised term structure), Spectra (yield-bearing curve), Firelight (credit spread)
-4. The Demand Case — ~25% consumer credit; liquidation risk as the real constraint (Oct 2025 cascade); the MoreMarkets autopsy ($40M death case) and Kinetic (live case); borrower/lender economics; escaping the BTC cycle
+4. The Demand Case — ~25% consumer credit; liquidation risk as the real constraint (mechanism vs. collateral-value); the MoreMarkets autopsy ($40M death case) and Kinetic (live case); the second driver (borrowing against money you won't sell); escaping the BTC cycle
 5. Architecture — composing the curve: Midnight strip, Spectra PT/YT, Firelight overlay, the curve oracle/terminal, the fixed-term product, the curator layer, PT-as-collateral (denomination sets the risk)
 6. Stakeholder Economics — borrower, fixed-income lender, YT speculator, maker/LP, underwriter, protocol
 7. The Credit-Spread Layer — Firelight as core, construction, and honest limits
 8. Capital Requirements
 9. Open Questions — Midnight-on-Flare, continuous curve vs. dots, the borrower overlap, Firelight capacity, governance, tokenomics, metrics, the Kinetic incumbent path
-10. Failure Modes — eight scenarios, hardest first (the refinance borrower may not exist)
+10. Failure Modes — nine scenarios, hardest first: the borrower may not exist; collateral-value risk and the correlation cascade (deterministic liquidation orders it, doesn't abolish it)
 11. Sources
 
 ## Contributing

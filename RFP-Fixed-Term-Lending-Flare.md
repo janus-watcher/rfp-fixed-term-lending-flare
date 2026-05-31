@@ -5,7 +5,7 @@
 *Phase 1: FXRP, FLR, sFLR · Roadmap: FBTC, stXRP, cross-asset credit*
 
 **Author:** Janus the Watcher ([@XRPWatcherJanus](https://x.com/XRPWatcherJanus))
-**Status:** Draft 3 — community review
+**Status:** Draft 4 — community review
 **Date:** 31 May 2026
 
 ---
@@ -130,6 +130,8 @@ In traditional finance a loan has term structure — a fixed rate, a fixed matur
 
 No treasurer leverages a balance sheet against an instrument a bot can liquidate at 3am on a feed error. Liquidation risk, not the interest rate, is the binding constraint on borrow demand — and a fixed rate alone does not remove it. The product that actually unlocks the borrower is fixed rate **and** fixed term **and** deterministic, non-exploitable liquidation **and** a priced tail. Midnight supplies the first two and a predictable liquidation path (Section 5.1); FTSO and Firelight supply the last two (Section 7). Remove any one and the borrower stays home.
 
+One distinction has to be drawn precisely, because conflating it is how a product like this oversells itself. "Liquidation risk" is two risks wearing one name. The first is *mechanism* risk — the oracle glitch, the 3am bot, the cascade triggered by a bad print on one venue. Deterministic, TWAP-read liquidation and a decentralised oracle remove that, and the removal is real. The second is *collateral-value* risk — the hard asset itself falling. No liquidation design removes that; it only makes the liquidation orderly rather than chaotic. A borrower against FXRP or FLR is still short the drawdown. This RFP solves the mechanism risk and only *manages* the value risk — through overcollateralisation, through Firelight, and by stating it plainly as a failure mode in its own right (Failure Mode 10.4), not folding it into the win.
+
 ## 4.3 The MoreMarkets autopsy: a $40M proof of the missing machine
 
 The sharpest evidence is a recent death. In December 2025 MoreMarkets shut its Earn product with more than $40M in TVL and roughly 4,000 depositors — built with no points, no LP program, no incentives at all ([closure notice](https://www.moremarkets.xyz/blog/moremarkets-earn-accounts-closure)). Organic deposits at that scale, in a market of mercenary capital, are rare. The founder's public diagnosis was blunt: the borrower market was non-existent.
@@ -156,13 +158,21 @@ A *fixed-rate, fixed-maturity* loan against crypto collateral, with a predictabl
 
 Best case: crypto-collateralised fixed-term credit clears materially below 25% (overcollateralised lending should), and the refinance use case pulls genuinely external, non-crypto-native demand on-chain. Base case: the product wins crypto-native borrowers who currently use variable-rate lending and want term certainty, a real but smaller market. Worst case: the person paying 25% on a Visa and the person holding $50k of FXRP are nearly disjoint sets, and the refinance narrative is a story the collateral can't actually serve (see Failure Mode 10.1).
 
-## 4.6 The lender side: converting noise yield into signal yield
+## 4.6 The second demand driver: borrowing against money you won't sell
+
+The ~25% anchor (4.1) is the external, consumer-credit case. There is a second driver, native to the holders this chain attracts, and it is structurally larger. A conviction holder of a hard-money asset — XRP through FXRP, BTC through FBTC — does not want to sell. Selling ends the thesis, realises the tax, and forfeits a position held for a decade. What they want is liquidity without disposal: borrow fiat against the asset, spend or redeploy it, never touch the underlying. It is the on-chain form of the oldest move in private wealth — hold the appreciating asset, borrow against it, never realise.
+
+Fixed term and a known cost are not optional for this borrower; they are the entire point. A conviction holder will not pledge an asset they refuse to sell against a debt a feed glitch can liquidate — that is selling at the worst possible price, on a bot's schedule. Remove the mechanism risk (4.2) and give them a term they can plan around, and the trade is rational for the first time. This is the demand the ~25% anchor only gestures at: not people fleeing a credit card, but people who will never sell and still need their capital to work.
+
+The honest edge, carried into Failure Mode 10.4: this is also the most dangerous demand to unlock. It is one-directional — everyone is long the same hard money — pro-cyclical, and short the same crash. The driver that makes the product viable is the driver that makes it fragile. Both are true at once, and this RFP says so rather than keeping the flattering half.
+
+## 4.7 The lender side: converting noise yield into signal yield
 
 The lender earning a 25%-ish floating yield somewhere in DeFi today cannot decompose it. How much is term premium? How much is credit spread? How much is an emissions subsidy that ends next quarter? Without a curve, the answer is unknowable, so the yield is indistinguishable from noise.
 
 A curve lets a lender lock a fixed yield for a fixed term — buy PT on Spectra, or take the credit side on Midnight — and read off exactly what they are being paid for. With Firelight cover priced alongside, the lender can split the quoted yield into riskless term premium and credit spread, and decide whether the spread compensates the tail. That is the difference between earning 25% and *understanding* 25%.
 
-## 4.7 Two-sided demand, and escaping the cycle
+## 4.8 Two-sided demand, and escaping the cycle
 
 The curve is necessary precisely because the two sides want opposite things and currently have no venue to meet across maturities. Borrowers want payment certainty (fixed cost, chosen term). Fixed-income lenders want yield certainty (PT, Midnight credit). YT speculators want the variable leg. The curve is the price at which these preferences clear. Build it and the demand becomes visible; leave it unbuilt and the demand stays latent, mispriced as a flat 25% that nobody can interrogate.
 
@@ -263,7 +273,7 @@ Quotes across the Midnight strip (offer-based, capital productive elsewhere unti
 Sells coverage on lender positions; earns premium, bears claim payouts.
 
 - Gains: premium income, a new product surface (covering a credit market, not just a staking protocol).
-- Risks: correlated claims — a single oracle or contract failure hits every covered position at once; capacity limits; the discretion of the claims consortium is itself an attack surface (Failure Mode 10.5).
+- Risks: correlated claims — a single oracle or contract failure hits every covered position at once; capacity limits; the discretion of the claims consortium is itself an attack surface (Failure Mode 10.6).
 
 ## 6.6 The protocol
 
@@ -289,7 +299,7 @@ The deeper role, beyond pricing the spread, is removing the constraint of Sectio
 
 ## 7.3 The honest limits
 
-Firelight's claims process is not parametric: an appointed agent files, an independent consortium reviews, payout executes on-chain only if approved. That review is discretion, and discretion is both a feature (it can judge novel exploits) and an attack surface (it can be captured, delayed, or disputed). A credit spread derived from a discretionary-payout product is only as credible as the consortium's independence and the coverage pool's capacity. Section 10.5 treats this as a first-order failure mode, not a footnote.
+Firelight's claims process is not parametric: an appointed agent files, an independent consortium reviews, payout executes on-chain only if approved. That review is discretion, and discretion is both a feature (it can judge novel exploits) and an attack surface (it can be captured, delayed, or disputed). A credit spread derived from a discretionary-payout product is only as credible as the consortium's independence and the coverage pool's capacity. Section 10.6 treats this as a first-order failure mode, not a footnote.
 
 Coverage capacity is finite. If the pool cannot cover the notional that wants covering, the published spread understates true risk (it is the price of cover that exists, not cover that is needed). The terminal must publish remaining capacity alongside the spread, or the spread misleads.
 
@@ -337,23 +347,31 @@ If DeFi participants structurally prefer variable yield and leverage (YT, not PT
 
 A fixed rate does not remove rate-and-default risk; it transfers it to the maker/LP and the underwriter, who are short convexity across the curve. The curve looks smooth in calm regimes and breaks in a vol spike — borrowers default exactly when collateral craters and exactly when cover is most needed. Mitigation: rate-move circuit breakers, per-maturity exposure caps, Firelight overlay sized for correlated drawdown, stress simulation (e.g. collateral −40% in 48h) as a mainnet precondition. The via-negativa framing: the product's value is the rate uncertainty it removes for users, paid for by concentrating tail risk in parties equipped to price it — only true if they actually are.
 
-## 10.4 Liquidity fragmentation across maturities
+## 10.4 Collateral-value risk and the correlation cascade
+
+The distinction from Section 4.2, given its own failure mode because it is the one the architecture cannot engineer away. Deterministic liquidation solves *mechanism* risk — the oracle glitch, the 3am bot. It does nothing about *collateral-value* risk: the hard asset itself crashing. Orderly liquidation is still liquidation; it makes the event clean, not absent.
+
+The teeth are reflexive. The demand this RFP unlocks — conviction holders borrowing against FXRP, FLR, FBTC they refuse to sell (Section 4.6) — is one-directional and correlated. In a "correlations → 1" event, every borrower's collateral craters together, every position breaches at once, and even perfectly orderly liquidations dump correlated collateral into a falling market. The cascade returns through the collateral door, with a flawless oracle. The product is structurally short exactly the macro event the broader Janus framework treats as the one that matters — and by making the borrow-against-hard-money trade easy and rational (4.6), it *concentrates* that fragility rather than dispersing it. The underwriter does not escape it either: a Firelight pool covering these positions is short the same correlated event its policyholders are.
+
+Mitigation: conservative LLTV on volatile collateral and the safe same-asset markets first (Section 5.7); per-asset and aggregate exposure caps; Firelight sized for correlated rather than idiosyncratic drawdown, with that limitation disclosed; a correlated −50%-across-all-collateral stress simulation as a mainnet precondition, not a later audit. Falsification: if the only LLTVs that survive a correlated crash are so conservative that the borrow stops being competitive with the 25% it was meant to beat, the value proposition is hollow and the product should not ship at scale.
+
+## 10.5 Liquidity fragmentation across maturities
 
 The classic isolated-market problem. Capital that would lend across the curve gets stranded per maturity, and no point is deep enough to quote tightly. Mitigation: lean entirely on Midnight's offer/callback and multi-market design, which exists precisely to let one maker quote the whole strip without pre-funding each point. Falsification: if fragmentation persists despite the offer model, the curve is uneconomic to maintain.
 
-## 10.5 Firelight discretion and capacity
+## 10.6 Firelight discretion and capacity
 
 The credit spread is only as credible as the coverage behind it. A discretionary claims consortium can be slow, captured, or disputed; finite capacity means the published spread prices cover that exists, not cover that is needed. Mitigation: publish remaining capacity beside every spread; disclose consortium composition and independence; treat covered yield as an upper bound on safety, never a guarantee. Falsification: if the spread cannot be made credible, publish only the gross collateralised curve and drop the credit-spread claim rather than mislead.
 
-## 10.6 Midnight licence / deployment blocker
+## 10.7 Midnight licence / deployment blocker
 
 If the Morpho Association does not deploy Midnight to Flare and the licence does not permit an independent deployment, the collateralised backbone is missing and the composition fails. Mitigation: resolve this first (Open Question 1); evaluate a fallback fixed-maturity lending base only if Midnight is genuinely unavailable. This is a precondition, not a risk to manage mid-build.
 
-## 10.7 Reflexive tokenomics
+## 10.8 Reflexive tokenomics
 
 A protocol token coupled to LP capital risks the Lyra-2022 death spiral: token down → maker TVL down → spreads widen → volume falls → token down. Mitigation: fee-reinforced liquidity with no token, or a strict separation of token (governance/fee-discount) from maker capital. Falsification: if no token design avoids reflexivity, ship without one.
 
-## 10.8 Regulatory reclassification
+## 10.9 Regulatory reclassification
 
 Fixed-term lending against collateral, marketed as a consumer-credit alternative, is closer to a regulated lending and securities perimeter than variable DeFi yield — precisely *because* the consumer-credit framing invites the comparison. Note that Midnight's own whitepaper goes to unusual lengths to disclaim that its "credit", "debt", "obligation", and "maturity" terms denote any regulated instrument. Mitigation: permissionless, non-upgradeable settlement core; geo-block at the frontend; no KYC dependency that can be weaponised; careful that marketing copy does not itself create the regulated characterisation the contracts avoid.
 

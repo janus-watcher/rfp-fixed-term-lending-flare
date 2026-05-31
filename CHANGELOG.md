@@ -2,6 +2,16 @@
 
 All notable changes to this RFP. Versioned snapshots live in [`drafts/`](drafts/); the push-ready set lives in [`github_upload/`](github_upload/).
 
+## Draft 4 — 2026-05-31
+
+Separated two risks that "liquidation risk" was bundling, and named the second demand driver.
+
+- **Section 4.2:** distinguished *mechanism* risk (oracle glitch, 3am bot — solved by deterministic/TWAP liquidation) from *collateral-value* risk (the hard asset crashing — only managed, never removed). Stops the product overselling itself.
+- **New Section 4.6:** the second demand driver — conviction holders borrowing fiat against hard money they refuse to sell (liquidity without disposal). Structurally larger than the consumer-credit anchor, and explicitly the same flow that creates the fragility below.
+- **New Failure Mode 10.4 — collateral-value risk and the correlation cascade:** the demand unlocked is one-directional, pro-cyclical, and short the Phase-2 "correlations → 1" crash; orderly liquidation still dumps correlated collateral into a falling market, so the cascade returns through the collateral door with a flawless oracle. The underwriter is short the same event. Mitigation: conservative LLTV, exposure caps, correlated-drawdown stress as a mainnet precondition. (Renumbered former 10.4–10.8 to 10.5–10.9.)
+- Credit to a sparring review for forcing the mechanism-vs-value split.
+- Status bumped to Draft 4.
+
 ## Draft 3 — 2026-05-31
 
 Reframed the demand thesis around liquidation risk and added the strongest evidence.
